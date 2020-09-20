@@ -173,4 +173,47 @@ object ModelLoader {
         // assemble the renderable
         return Renderable(meshes)
     }
+
+    fun loadModelCoin(objpath: String, pitch: Float, yaw: Float, roll: Float): Coin? {
+        val model = load(objpath) ?: return null
+        val textures = ArrayList<Texture2D>()
+        val materials = ArrayList<Material>()
+        val meshes = ArrayList<Mesh>()
+        val stride = 8 * 4
+        val atr1 = VertexAttribute(3, GL11.GL_FLOAT, stride, 0)
+        val atr2 = VertexAttribute(2, GL11.GL_FLOAT, stride, 3 * 4)
+        val atr3 = VertexAttribute(3, GL11.GL_FLOAT, stride, 5 * 4)
+        val vertexAttributes = arrayOf(atr1, atr2, atr3)
+        // preprocessing rotation
+        val rot = Matrix3f().rotateZ(roll).rotateY(yaw).rotateX(pitch)
+        // create textures
+//default textures
+        val ddata = BufferUtils.createByteBuffer(4)
+        ddata.put(0.toByte()).put(0.toByte()).put(0.toByte()).put(0.toByte())
+        ddata.flip()
+        for (i in model.textures.indices) {
+            if (model.textures[i].isEmpty()) {
+                textures.add(Texture2D(ddata, 1, 1, true))
+            } else {
+                textures.add(Texture2D(objpath.substring(0, objpath.lastIndexOf('/') + 1) + model.textures[i], true))
+            }
+        }
+        // materials
+        for (i in model.materials.indices) {
+            materials.add(Material(textures[model.materials[i].diffTexIndex],
+                    textures[model.materials[i].emitTexIndex],
+                    textures[model.materials[i].specTexIndex],
+                    model.materials[i].shininess,
+                    Vector2f(1.0f, 1.0f)))
+        }
+        // meshes
+        for (i in model.meshes.indices) {
+            meshes.add(Mesh(flattenVertexData(model.meshes[i].vertices, rot),
+                    flattenIndexData(model.meshes[i].indices),
+                    vertexAttributes,
+                    materials[model.meshes[i].materialIndex]))
+        }
+        // assemble the renderable
+        return Coin(meshes)
+    }
 }
