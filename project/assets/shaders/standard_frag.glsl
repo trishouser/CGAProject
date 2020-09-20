@@ -5,12 +5,12 @@ uniform sampler2D emit;
 uniform sampler2D specular;
 uniform float shininess;
 
-uniform vec3 coin_pointlight_col;
+uniform vec3 coinpointlight_col;
 uniform vec3 spotlight_dir;
 uniform float spot_inner;
 uniform float spot_outer;
 uniform vec3 spotlight_col;
-uniform vec3 coin_pointlight_attenuation;
+uniform vec3 coinpointlight_attenuation;
 uniform vec3 spotLightAttenuation;
 uniform vec3 shadingcolor;
 
@@ -75,9 +75,9 @@ void main(){
 
     vec3 diffspecpl = berechnungdifspec(vertexData.norm, vertexData.lightdir, vertexData.viewdir, texdiff, texspec, shininess);
 
-    float attenuationpl =  berechnungattentuation(length(vertexData.lightdir), vec3(1.0f, 1.0f, 1.0f));
+    float attenuationpl =  berechnungattentuation(length(vertexData.lightdir), coinpointlight_attenuation);
 
-    vec3 pointcol =  attenuationpl * coin_pointlight_col;
+    vec3 pointcol =  attenuationpl * coinpointlight_col;
 
     vec3 result = vec3((texemit)  *(pointcol + diffspecpl));
     //  vec3 result = vec3((texemit  ) * (vec3(0,1,0) + spotcol + diffspecsl + pointcol) );

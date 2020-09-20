@@ -9,7 +9,7 @@ uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 uniform vec2 tcMultiplier;
 uniform vec3 spotlight_pos;
-uniform vec3 coin_pointlight_pos;
+uniform vec3 coinpointlight_pos;
 
 out struct VertexData
 {
@@ -39,11 +39,11 @@ void main(){
     vertexData.norm =mat3(transpose(inverse(modelview))) * normal;
     vertexData.tc = texcoords * tcMultiplier;
 
-    vec4 lpos = view_matrix * vec4(coin_pointlight_pos,0.2f);
-    vec4 p = (view_matrix * model_matrix * vec4(position,1.0f));
+    vec4 lpos = view_matrix * vec4(coinpointlight_pos,1.0f);
+    vec4 p = (view_matrix * model_matrix * vec4(position,0.1f));
     vertexData.lightdir =(lpos-p).xyz;
 
-    vec4 slpos =view_matrix *vec4(spotlight_pos,0.2f);
+    vec4 slpos =view_matrix *vec4(spotlight_pos,0.0f);
     vertexData.lightdirsp = normalize((slpos-p ).xyz);
 
     vertexData.viewdir=normalize(-p.xyz);

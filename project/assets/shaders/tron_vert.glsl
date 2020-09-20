@@ -12,11 +12,11 @@ uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 uniform vec2 tcMultiplier ;
 uniform vec3 spotlight_pos;
-uniform vec3 bikepointlight_pos;
+uniform vec3 coinpointlight_pos;
 out struct VertexData
 {
-  //  float laengesl;
-   // float laengepl;
+//  float laengesl;
+// float laengepl;
     vec3 norm;
     vec2 tc;
     vec3 lightdir;
@@ -29,29 +29,29 @@ out struct VertexData
 void main(){
 
 
-       mat4 modelview = view_matrix * model_matrix;
-       vec4 pos = projection_matrix * modelview * vec4(position, 1.0f);
+        mat4 modelview = view_matrix * model_matrix;
+        vec4 pos = projection_matrix * modelview * vec4(position, 1.0f);
 
 
-       gl_Position = pos;
+        gl_Position = pos;
 
-       vertexData.norm =mat3(transpose(inverse(modelview))) * normal;
-       vertexData.tc = texcoords * tcMultiplier;
+        vertexData.norm =mat3(transpose(inverse(modelview))) * normal;
+        vertexData.tc = texcoords * tcMultiplier;
 
-       vec4 lpos = view_matrix * vec4(bikepointlight_pos,1.0f);
-       vec4 p = (view_matrix * model_matrix * vec4(position,1.0f));
-       vertexData.lightdir =(lpos-p).xyz;
+        vec4 lpos = view_matrix * vec4(coinpointlight_pos,1.0f);
+        vec4 p = (view_matrix * model_matrix * vec4(position,1.0f));
+        vertexData.lightdir =(lpos-p).xyz;
 
-       vec4 slpos =view_matrix *vec4(spotlight_pos,1.0f);
-       vertexData.lightdirsp = normalize((slpos-p ).xyz);
+        vec4 slpos =view_matrix *vec4(spotlight_pos,1.0f);
+        vertexData.lightdirsp = normalize((slpos-p ).xyz);
 
-       vertexData.viewdir =normalize(-p.xyz);
+        vertexData.viewdir =normalize(-p.xyz);
 
-      // vertexData.laengesl = length(lpos.xyz - p.xyz);
-       //vertexData.laengepl = length(slpos.xyz - p.xyz);
+        // vertexData.laengesl = length(lpos.xyz - p.xyz);
+        //vertexData.laengepl = length(slpos.xyz - p.xyz);
 
 
-   }
+    }
 
 
 

@@ -8,6 +8,7 @@ open class PointLight(var pos :Vector3f,var color :Vector3f) :Transformable(),IP
 
 
     var attenuation = Vector3f(1.0f,0.5f,0.1f)
+
 init {
 
     translateGlobal(pos)

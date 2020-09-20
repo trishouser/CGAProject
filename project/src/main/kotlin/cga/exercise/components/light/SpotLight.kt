@@ -16,7 +16,7 @@ class SpotLight( pos :Vector3f, col: Vector3f,  val innerAngel :Float ,val outer
 
     override fun bind(shaderProgram: ShaderProgram, name: String, viewMatrix: Matrix4f) {
 
-        var position :Vector4f  = Vector4f(getWorldPosition(),1.0f).mul(viewMatrix)
+        var position :Vector4f  = Vector4f(getWorldPosition(),0.0f).mul(viewMatrix)
         shaderProgram.setUniform("spotlight_col",spotcolor)
         shaderProgram.setUniform("spotlight_pos", Vector3f(position.x,position.y,position.z))
         shaderProgram.setUniform("spotlight_dir",getWorldZAxis().negate().mul(Matrix3f(viewMatrix)))
