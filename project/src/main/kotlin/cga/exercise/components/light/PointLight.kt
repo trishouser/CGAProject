@@ -14,8 +14,8 @@ init {
 }
     override fun bind(shaderProgram: ShaderProgram, name: String) {
         shaderProgram.setUniform(name + "pointlight_col",color)
-        shaderProgram.setUniform(name +"pointlight_pos",getWorldPosition())
-        shaderProgram.setUniform(name +"pointlight_attenuation",attenuation)
+        shaderProgram.setUniform(name + "pointlight_pos",getWorldPosition())
+        shaderProgram.setUniform(name + "pointlight_attenuation",attenuation)
     }
 
 }
