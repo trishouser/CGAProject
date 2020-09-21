@@ -32,9 +32,9 @@ class Scene(private val window: GameWindow)  {
 
     var bodenr: Renderable
     var wandv: Renderable
-    //var wandh: Renderable
-    //var wandr: Renderable
-    //var wandl: Renderable
+    var wandh: Renderable
+    var wandr: Renderable
+    var wandl: Renderable
     var camera :TronCamera
     var eyecamera :EyeCamera
     var birdseyecamera :BirdsEyeCamera
@@ -63,15 +63,19 @@ class Scene(private val window: GameWindow)  {
 
         activeShader = standardShader
 
-        person = ModelLoader.loadModel("assets/Light Cycle/Light Cycle/HQ_Movie cycle.obj",Math.toRadians(-90f),Math.toRadians(45f),Math.toRadians(0.0f)) ?: throw IllegalArgumentException("Could not load the model")
-        person = ModelLoader.loadModel("assets/models/person.obj",Math.toRadians(0f),Math.toRadians(180f),Math.toRadians(0.0f)) ?: throw IllegalArgumentException("Could not load the model")
+        //person = ModelLoader.loadModel("assets/Light Cycle/Light Cycle/HQ_Movie cycle.obj",Math.toRadians(-90f),Math.toRadians(45f),Math.toRadians(0.0f)) ?: throw IllegalArgumentException("Could not load the model")
+        //person = ModelLoader.loadModel("assets/models/person.obj",Math.toRadians(0f),Math.toRadians(180f),Math.toRadians(0.0f)) ?: throw IllegalArgumentException("Could not load the model")
+        person = ModelLoader.loadModel("assets/models/star wars republic guard.obj",Math.toRadians(0f),Math.toRadians(180f),Math.toRadians(0.0f)) ?: throw IllegalArgumentException("Could not load the model")
+
         cent = ModelLoader.loadModel("assets/models/50cent.obj",Math.toRadians(90.0f),Math.toRadians(180.0f),Math.toRadians(90.0f)) ?: throw IllegalArgumentException("Could not load the model")
 
 
-        person.scaleLocal(Vector3f(0.4f,0.4f,0.4f))
+        //person.scaleLocal(Vector3f(0.4f,0.4f,0.4f))
+        person.scaleLocal(Vector3f(0.3f,0.3f,0.3f))
+
         cent.scaleLocal(Vector3f(0.8f,0.8f,0.8f))
 
-        person.translateLocal(Vector3f(0f,2.3f,0f))
+        person.translateLocal(Vector3f(0f,0f,0f))
         cent.translateLocal(coin_position)
         coin_position = Vector3f((Math.random()*20).toFloat()-10,0f,(Math.random()*20).toFloat()-10)
         cent.translateLocal(coin_position)
@@ -93,7 +97,8 @@ class Scene(private val window: GameWindow)  {
         wall_emit.setTexParams(GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR)
 
         material = Material(diff,emit,spec,60f, Vector2f(2f,2f))
-        wall_material = Material(diff, wall_emit,spec, 30f, Vector2f(2f, 2f))
+        wall_material = Material(diff, wall_emit,spec, 30f, Vector2f(1f, 2f))
+
 
 
 
@@ -109,10 +114,24 @@ class Scene(private val window: GameWindow)  {
 
         bodenr = Renderable(mutableListOf(bodenmesh))
         wandv = Renderable(mutableListOf(wallmesh))
+        wandh = Renderable(mutableListOf(wallmesh))
+        wandr = Renderable(mutableListOf(wallmesh))
+        wandl = Renderable(mutableListOf(wallmesh))
+
 
         wandv.rotateAroundPoint(0.0f, Math.toRadians(90.0f), Math.toRadians(-90.0f), Vector3f(0.0f))
-        wandv.translateGlobal(Vector3f(-22.0f, 0.0f, 33.5f))
+        wandh.rotateAroundPoint(0.0f, Math.toRadians(90.0f), Math.toRadians(90.0f), Vector3f(0.0f))
+        wandr.rotateAroundPoint(0.0f, Math.toRadians(0.0f), Math.toRadians(90.0f), Vector3f(0.0f))
+        wandl.rotateAroundPoint(0.0f, Math.toRadians(0.0f), Math.toRadians(-90.0f), Vector3f(0.0f))
+
+        wandv.translateGlobal(Vector3f(-11.0f, 0.0f, 21.0f))
+        wandh.translateGlobal(Vector3f(11.0f, 0.0f, -21.0f))
+        wandr.translateGlobal(Vector3f(21.0f, 0.0f, -11.0f))
+        wandl.translateGlobal(Vector3f(-21.0f, 0.0f, 11.0f))
         wandv.scaleLocal(Vector3f(0.8f,0.8f,2.8f))
+        wandh.scaleLocal(Vector3f(0.8f,0.8f,2.8f))
+        wandr.scaleLocal(Vector3f(0.8f,0.8f,2.8f))
+        wandl.scaleLocal(Vector3f(0.8f,0.8f,2.8f))
         //kugelr = Renderable(mutableListOf(kugelMesh))
 
 
@@ -123,7 +142,7 @@ class Scene(private val window: GameWindow)  {
 
         camera = TronCamera()
         camera.rotateLocal(Math.toRadians(-35.0f),0f,0f)
-        camera.translateLocal(Vector3f(0.0f,1.0f,5.5f))
+        camera.translateLocal(Vector3f(0.0f,1.0f,15f))
         camera.parent = person
 
         eyecamera = EyeCamera()
@@ -163,34 +182,34 @@ class Scene(private val window: GameWindow)  {
 
         activeShader.use()
         camera.bind(activeShader)
-        //eyecamera.bind(staticShader)
-        //birdseyecamera.bind(staticShader)
         activeShader.setUniform("shadingcolor",Vector3f(1f,0f,0f))
         pointlight.bind(activeShader,"coin")
         spotligt.bind(activeShader," ", camera.getCalculateViewMatrix())
         activeShader.setUniform("shadingcolor",Vector3f(0f,1f,0f))
         bodenr.render(activeShader)
         wandv.render(activeShader)
+        wandh.render(activeShader)
+        wandr.render(activeShader)
+        wandl.render(activeShader)
         person.render(activeShader)
         cent.render(activeShader)
     }
 
     fun update(dt: Float, t: Float) {
-
-        if(window.getKeyState(GLFW_KEY_W)){
+        if(window.getKeyState(GLFW_KEY_W) && person.getPosition().x < 20.0f && person.getPosition().y < 20.0f && person.getPosition().z < 20.0f && person.getPosition().x > -20.0f && person.getPosition().y > -20.0f && person.getPosition().z > -20.0f){
             person.translateLocal(Vector3f(0.0f,0.0f,-10.0f*dt))
         }
-        if(window.getKeyState(GLFW_KEY_S)){
+        if(window.getKeyState(GLFW_KEY_S) && person.getPosition().x < 22.0f && person.getPosition().y < 22.0f && person.getPosition().z < 22.0f && person.getPosition().x > -22.0f && person.getPosition().y > -22.0f && person.getPosition().z > -22.0f){
             person.translateLocal(Vector3f(0f,0f,10.0f*dt))
 
         }
-        if(window.getKeyState(GLFW_KEY_A)){
-            person.translateLocal(Vector3f(0.0f,0.0f,-2.0f*dt))
+        if(window.getKeyState(GLFW_KEY_A) && person.getPosition().x < 20.0f && person.getPosition().y < 20.0f && person.getPosition().z < 20.0f && person.getPosition().x > -20.0f && person.getPosition().y > -20.0f && person.getPosition().z > -20.0f){
+            person.translateLocal(Vector3f(0.0f,0.0f,0.0f*dt))
             person.rotateLocal(0.0f,2f*dt,0.0f)
         }
-        if(window.getKeyState(GLFW_KEY_D)){
+        if(window.getKeyState(GLFW_KEY_D) && person.getPosition().x < 20.0f && person.getPosition().y < 20.0f && person.getPosition().z < 20.0f && person.getPosition().x > -20.0f && person.getPosition().y > -20.0f && person.getPosition().z > -20.0f){
 
-            person.translateLocal(Vector3f(0.0f,0.0f,-2.0f*dt))
+            person.translateLocal(Vector3f(0.0f,0.0f,0.0f*dt))
             person.rotateLocal(0.0f,-2f*dt,0.0f)
 
         }
